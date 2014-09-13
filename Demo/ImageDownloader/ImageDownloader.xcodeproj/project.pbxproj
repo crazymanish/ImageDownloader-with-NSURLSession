@@ -444,6 +444,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImageDownloader/ImageDownloader-Prefix.pch";
 				INFOPLIST_FILE = "ImageDownloader/ImageDownloader-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -457,6 +458,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImageDownloader/ImageDownloader-Prefix.pch";
 				INFOPLIST_FILE = "ImageDownloader/ImageDownloader-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -521,6 +523,7 @@
 				2626C3AB19C1AF270009A5A2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2626C3AC19C1AF270009A5A2 /* Build configuration list for PBXNativeTarget "ImageDownloaderTests" */ = {
 			isa = XCConfigurationList;
@@ -529,6 +532,7 @@
 				2626C3AE19C1AF270009A5A2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

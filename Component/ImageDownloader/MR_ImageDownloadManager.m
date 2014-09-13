@@ -30,9 +30,12 @@
 
 
 //≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
-// An Array, who will keep track the downloading-Task
+// An Array-Category, will be Responsible to START-Downloading Task
 //≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
-@interface MR_DownloadTaskList : NSMutableArray
+@interface NSMutableArray (MR_DownloadTaskList)
+
+//will responsible to start the Task
+-(void)addDownloadTask:(id)downloadingTask;
 
 @end
 
@@ -45,8 +48,8 @@
 
 //Download-Queue
 @property (nonatomic,strong,readwrite) NSOperationQueue *downloadQueue;
-//Keep Track the download-Task
-@property (nonatomic,strong,readwrite) MR_DownloadTaskList *downloadTasks;
+//who will keep track the downloading-Task,
+@property (nonatomic,strong,readwrite) NSMutableArray *downloadTasks;
 
 @end
 
@@ -78,7 +81,7 @@ static MR_ImageDownloadManager *sharedInstance;
         //Download Queue
         _downloadQueue=[[NSOperationQueue alloc] init];
         //Download Tasks
-        _downloadTasks=[[MR_DownloadTaskList alloc] init];
+        _downloadTasks=[NSMutableArray array];
     }
     return self;
 }
@@ -122,7 +125,7 @@ withDownloadProgressHandler:(MR_DownloadImageProgressBlock)progressHandler
     MR_DownloadTask *downloadingOperation=[[MR_DownloadTask alloc] initWithImageUrl:url withOperationQueue:_downloadQueue withCompletionHandler:completionHandler withDownloadProgressHandler:progressHandler];
     
     //Add operation into download Task-List, who will resposible to Start downloading-Task
-    [self.downloadTasks addObject:downloadingOperation];
+    [self.downloadTasks addDownloadTask:downloadingOperation];
     
     //Add-Observer----
     [downloadingOperation addObserver:self forKeyPath:@"isFinished" options:NSKeyValueObservingOptionNew context:NULL];
@@ -134,7 +137,7 @@ withDownloadProgressHandler:(MR_DownloadImageProgressBlock)progressHandler
         MR_DownloadTask *downloadingOperation = object;
         if (downloadingOperation.isFinished){
             [downloadingOperation removeObserver:self forKeyPath:keyPath];
-           // NSLog(@"\n\n Operation has been completed for URL =%@",downloadingOperation.downloadTask.originalRequest.URL);
+            // NSLog(@"\n\n Operation has been completed for URL =%@",downloadingOperation.downloadTask.originalRequest.URL);
         }
     }
 }
@@ -144,17 +147,19 @@ withDownloadProgressHandler:(MR_DownloadImageProgressBlock)progressHandler
 
 #pragma mark - MR_DownloadTaskList @implementation
 //≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
-//  An Array, who will keep track the downloading-Task
+//  An Array-Category, will be Responsible to START-Downloading Task
 //≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠
-@implementation MR_DownloadTaskList
+@implementation NSMutableArray (MR_DownloadTaskList)
 
-#pragma mark Override addObject @Manish
--(void)addObject:(id)anObject
+#pragma mark add Download Task @Manish
+-(void)addDownloadTask:(id)downloadingTask
 {
-    if ([anObject isKindOfClass:[MR_DownloadTask class]]) {
-        MR_DownloadTask *downloadingOperation=anObject;
+    if ([downloadingTask isKindOfClass:[MR_DownloadTask class]]) {
+        MR_DownloadTask *downloadingOperation=downloadingTask;
         //Start Downloading
         [downloadingOperation.downloadTask resume];
+        //Add To Array
+        [self addObject:downloadingTask];
     }
 }
 
